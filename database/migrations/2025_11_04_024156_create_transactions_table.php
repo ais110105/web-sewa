@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('order_id')->unique();
+            $table->string('transaction_id')->nullable();
+            $table->decimal('gross_amount', 15, 2);
+            $table->string('payment_type')->nullable();
+            $table->string('payment_method')->nullable(); // qris, bank_transfer, etc
+            $table->string('bank')->nullable(); // bca, bni, bri, mandiri for VA
+            $table->string('va_number')->nullable();
+            $table->string('status')->default('pending'); // pending, settlement, expire, cancel, deny
+            $table->text('snap_token')->nullable();
+            $table->text('snap_url')->nullable();
+            $table->json('items')->nullable(); // Store rental items details
+            $table->json('midtrans_response')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transactions');
+    }
+};

@@ -1,0 +1,61 @@
+/* Custom Compact Table Styling */
+.table-compact {
+    font-size: 0.8125rem;
+}
+
+.table-compact thead th {
+    padding: 0.375rem 0.625rem;
+    font-weight: 600;
+}
+
+.table-compact tbody td {
+    padding: 0.375rem 0.625rem;
+    vertical-align: middle;
+}
+
+.table-compact .form-button-action {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.table-compact .form-button-action .btn {
+    padding: 0.2rem 0.4rem;
+    margin: 0;
+}
+
+/* Apply to all tables by default */
+.table {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.table thead th {
+    padding: 0.375rem 0.625rem;
+    font-weight: 600;
+}
+
+.table tbody td {
+    padding: 0.375rem 0.625rem;
+    vertical-align: middle;
+}
+
+.table .form-button-action {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.table .form-button-action .btn {
+    padding: 0.2rem 0.4rem;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.table .form-button-action .btn i {
+    font-size: 0.875rem;
+}
+
+/* Badge adjustments for compact tables */
+.table .badge {
+    font-size: 0.6875rem;
+    padding: 0.2rem 0.4rem;
+}
