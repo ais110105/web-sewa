@@ -6,12 +6,16 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+// Public landing page
+Route::get("/", [LandingController::class, "index"])->name("landing");
 
 // Guest routes
 Route::middleware("guest")->group(function () {
@@ -30,7 +34,7 @@ Route::middleware("auth")->group(function () {
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // Home - accessible by all authenticated users
-    Route::get("/", function () {
+    Route::get("/home", function () {
         $user = auth()->user();
 
         // Redirect to appropriate dashboard based on permission
@@ -42,9 +46,10 @@ Route::middleware("auth")->group(function () {
     })->name("home");
 
     // Management Dashboard - only for users with privilege
-    Route::get("/dashboard", function () {
-        return view("dashboards.privileged.index");
-    })
+    Route::get("/dashboard", [
+        \App\Http\Controllers\PrivilegedDashboardController::class,
+        "index",
+    ])
         ->middleware("dashboard.permission")
         ->name("dashboard");
 

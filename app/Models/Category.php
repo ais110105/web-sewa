@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -14,8 +15,13 @@ class Category extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'description',
-    ];
+    protected $fillable = ["name", "description"];
+
+    /**
+     * Get items that belong to the category.
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class);
+    }
 }

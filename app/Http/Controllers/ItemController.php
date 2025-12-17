@@ -23,12 +23,12 @@ class ItemController extends Controller
      */
     public function index(): View
     {
-        $this->authorize('view-items');
+        $this->authorize("view-items");
 
         $items = $this->itemService->getPaginatedItems(10);
         $categories = Category::all();
 
-        return view('items.index', compact('items', 'categories'));
+        return view("items.index", compact("items", "categories"));
     }
 
     /**
@@ -40,15 +40,18 @@ class ItemController extends Controller
             $item = $this->itemService->createItem($request->validated());
 
             return response()->json([
-                'success' => true,
-                'message' => 'Item created successfully!',
-                'data' => $item
+                "success" => true,
+                "message" => "Item created successfully!",
+                "data" => $item,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create item: ' . $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Failed to create item: " . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -57,27 +60,35 @@ class ItemController extends Controller
      */
     public function edit(int $id): JsonResponse
     {
-        $this->authorize('edit-items');
+        $this->authorize("edit-items");
 
         $item = $this->itemService->findItem($id);
 
         if (!$item) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Item not found'
-            ], 404);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Item not found",
+                ],
+                404,
+            );
         }
 
         return response()->json([
-            'success' => true,
-            'data' => [
-                'id' => $item->id,
-                'category_id' => $item->category_id,
-                'name' => $item->name,
-                'description' => $item->description,
-                'price_per_period' => $item->price_per_period,
-                'status' => $item->status,
-            ]
+            "success" => true,
+            "data" => [
+                "id" => $item->id,
+                "category_id" => $item->category_id,
+                "name" => $item->name,
+                "description" => $item->description,
+                "price_per_period" => $item->price_per_period,
+                "stock" => $item->stock,
+                "available_stock" => $item->available_stock,
+                "status" => $item->status,
+                "photo_url" => $item->photo_url
+                    ? asset("storage/" . $item->photo_url)
+                    : null,
+            ],
         ]);
     }
 
@@ -87,24 +98,33 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, int $id): JsonResponse
     {
         try {
-            $result = $this->itemService->updateItem($id, $request->validated());
+            $result = $this->itemService->updateItem(
+                $id,
+                $request->validated(),
+            );
 
             if ($result) {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Item updated successfully!'
+                    "success" => true,
+                    "message" => "Item updated successfully!",
                 ]);
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update item'
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Failed to update item",
+                ],
+                500,
+            );
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update item: ' . $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Failed to update item: " . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -113,27 +133,33 @@ class ItemController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->authorize('delete-items');
+        $this->authorize("delete-items");
 
         try {
             $result = $this->itemService->deleteItem($id);
 
             if ($result) {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Item deleted successfully!'
+                    "success" => true,
+                    "message" => "Item deleted successfully!",
                 ]);
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete item'
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Failed to delete item",
+                ],
+                500,
+            );
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete item: ' . $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Failed to delete item: " . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 }

@@ -1,3 +1,201 @@
+/* ===================================
+   ELEGANT WHITE THEME - NO GRADIENTS
+   =================================== */
+
+/* Body Background - Pure White */
+body {
+    background-color: #ffffff !important;
+}
+
+.wrapper {
+    background-color: #ffffff !important;
+}
+
+/* Main Panel - Clean White Background */
+.main-panel {
+    background-color: #f8f9fa !important;
+}
+
+.main-panel .container {
+    background-color: transparent !important;
+}
+
+/* Sidebar - White with Subtle Border */
+.sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e9ecef !important;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03) !important;
+}
+
+.sidebar[data-background-color="white"] {
+    background: #ffffff !important;
+}
+
+/* Logo Header - White */
+.logo-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.logo-header[data-background-color="white"] {
+    background: #ffffff !important;
+}
+
+.logo-header .logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+}
+
+.logo-text {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: #212529 !important;
+    white-space: nowrap !important;
+}
+
+/* Sidebar Navigation */
+.sidebar .nav-secondary > li > a {
+    color: #495057 !important;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-secondary > li > a:hover {
+    background-color: #f8f9fa !important;
+    color: #177dff !important;
+}
+
+.sidebar .nav-secondary > li.active > a {
+    background: #f0f7ff !important;
+    color: #177dff !important;
+    border-left: 3px solid #177dff !important;
+    box-shadow: none !important;
+}
+
+.sidebar .nav-secondary > li > a i {
+    color: #6c757d !important;
+}
+
+.sidebar .nav-secondary > li.active > a i,
+.sidebar .nav-secondary > li > a:hover i {
+    color: #177dff !important;
+}
+
+/* Sidebar Section Headers */
+.sidebar .nav-section h4.text-section {
+    color: #6c757d !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+/* Main Header - White with Subtle Border */
+.main-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+}
+
+.main-header .navbar-header {
+    background: #ffffff !important;
+    border-bottom: none !important;
+}
+
+/* Navbar Elements */
+.navbar-header .topbar-user .profile-username {
+    color: #495057 !important;
+}
+
+.navbar-header .topbar-user .profile-pic {
+    color: #495057 !important;
+}
+
+.navbar-header .topbar-user .profile-pic:hover {
+    background-color: #f8f9fa !important;
+}
+
+/* Dropdown Menu - Clean White */
+.dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid #e9ecef !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #495057 !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #177dff !important;
+}
+
+/* Cards - Clean White with Subtle Shadow */
+.card {
+    background: #ffffff !important;
+    border: 1px solid #e9ecef !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.card-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.card-title {
+    color: #212529 !important;
+}
+
+/* Remove All Gradients */
+.btn-primary,
+.btn-info,
+.btn-success,
+.btn-warning,
+.btn-danger,
+.btn-secondary {
+    background-image: none !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-primary:hover,
+.btn-info:hover,
+.btn-success:hover,
+.btn-warning:hover,
+.btn-danger:hover,
+.btn-secondary:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
+
+/* Page Inner Container */
+.page-inner {
+    background-color: transparent !important;
+}
+
+/* Toggle Buttons */
+.btn-toggle {
+    color: #495057 !important;
+}
+
+.btn-toggle:hover {
+    color: #177dff !important;
+    background-color: #f8f9fa !important;
+}
+
+/* Scrollbar */
+.sidebar-wrapper .scrollbar-inner {
+    background: #ffffff !important;
+}
+
+/* Remove Background Patterns */
+.sidebar::before,
+.logo-header::before,
+.main-header::before {
+    display: none !important;
+}
+
 /* Custom Compact Table Styling */
 .table-compact {
     font-size: 0.8125rem;
@@ -27,16 +225,20 @@
 .table {
     font-size: 0.8125rem;
     line-height: 1.4;
+    background: #ffffff !important;
 }
 
 .table thead th {
     padding: 0.375rem 0.625rem;
     font-weight: 600;
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #e9ecef !important;
 }
 
 .table tbody td {
     padding: 0.375rem 0.625rem;
     vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5 !important;
 }
 
 .table .form-button-action {
@@ -58,4 +260,46 @@
 .table .badge {
     font-size: 0.6875rem;
     padding: 0.2rem 0.4rem;
+}
+
+/* Footer - Clean White */
+footer {
+    background: #ffffff !important;
+    border-top: 1px solid #e9ecef !important;
+}
+
+/* Breadcrumb - Clean Style */
+.breadcrumbs {
+    background: transparent !important;
+}
+
+/* Form Elements - Clean White */
+.form-control,
+.form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #177dff !important;
+    box-shadow: 0 0 0 0.2rem rgba(23, 125, 255, 0.1) !important;
+}
+
+/* Modal - Clean White */
+.modal-content {
+    background: #ffffff !important;
+    border: 1px solid #e9ecef !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+.modal-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Remove any overlay gradients */
+.overlay,
+.overlay-content {
+    background: rgba(255, 255, 255, 0.95) !important;
 }

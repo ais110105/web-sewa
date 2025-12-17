@@ -11,7 +11,7 @@ class StoreItemRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create-items');
+        return $this->user()->can("create-items");
     }
 
     /**
@@ -22,11 +22,19 @@ class StoreItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'price_per_period' => ['required', 'numeric', 'min:0'],
-            'status' => ['required', 'in:available,rented,maintenance'],
+            "category_id" => ["required", "exists:categories,id"],
+            "name" => ["required", "string", "max:255"],
+            "description" => ["nullable", "string", "max:1000"],
+            "photo" => [
+                "nullable",
+                "image",
+                "mimes:jpeg,jpg,png,webp",
+                "max:2048",
+            ],
+            "price_per_period" => ["required", "numeric", "min:0"],
+            "stock" => ["required", "integer", "min:0"],
+            "available_stock" => ["required", "integer", "min:0"],
+            "status" => ["required", "in:available,rented,maintenance"],
         ];
     }
 
@@ -36,11 +44,14 @@ class StoreItemRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'category_id' => 'Category',
-            'name' => 'Item Name',
-            'description' => 'Description',
-            'price_per_period' => 'Price per Period',
-            'status' => 'Status',
+            "category_id" => "Category",
+            "name" => "Item Name",
+            "description" => "Description",
+            "photo" => "Photo",
+            "price_per_period" => "Price per Period",
+            "stock" => "Stock",
+            "available_stock" => "Available Stock",
+            "status" => "Status",
         ];
     }
 }

@@ -1,9 +1,10 @@
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar" data-background-color="white">
     <div class="sidebar-logo">
         <!-- Logo Header -->
-        <div class="logo-header" data-background-color="dark">
+        <div class="logo-header" data-background-color="white">
             <a href="{{ route('home') }}" class="logo">
-                <img src="{{ asset('template/assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20" />
+                <img src="{{ asset('storage/20251217_225404.png') }}" alt="navbar brand" class="navbar-brand" style="height: 40px; width: auto; object-fit: contain;" />
+                <span class="logo-text">Tirta Kesuma</span>
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">

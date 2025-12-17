@@ -28,7 +28,7 @@
             <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title mb-0">Cart Items ({{ $cartItems->count() }})</h4>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="clearCart()">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearCart()">
                         <i class="fa fa-trash"></i> Clear Cart
                     </button>
                 </div>
@@ -39,9 +39,14 @@
                     <div class="row align-items-center">
                         <!-- Item Image -->
                         <div class="col-md-2">
-                            <div class="bg-light d-flex align-items-center justify-content-center rounded"
-                                 style="height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                <i class="fa fa-box fa-2x text-white"></i>
+                            <div class="cart-item-image">
+                                @if($cartItem->item->photo_url)
+                                    <img src="{{ asset('storage/' . $cartItem->item->photo_url) }}" alt="{{ $cartItem->item->name }}">
+                                @else
+                                    <div class="cart-placeholder">
+                                        <i class="fa fa-box"></i>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -49,7 +54,7 @@
                         <div class="col-md-4">
                             <h6 class="mb-1">{{ $cartItem->item->name }}</h6>
                             <small class="text-muted">
-                                <span class="badge badge-info">{{ $cartItem->item->category?->name ?? 'Uncategorized' }}</span>
+                                <span class="badge-category-cart">{{ $cartItem->item->category?->name ?? 'Uncategorized' }}</span>
                             </small>
                             <p class="mb-0 mt-1">
                                 <strong>Rp {{ number_format($cartItem->item->price_per_period, 0, ',', '.') }}</strong>
@@ -68,7 +73,7 @@
                                 <i class="fa fa-calendar"></i>
                                 {{ $cartItem->end_date->format('d M Y') }}
                             </p>
-                            <small class="badge badge-primary">{{ $cartItem->duration_days }} days</small>
+                            <small class="badge-duration-cart">{{ $cartItem->duration_days }} days</small>
                         </div>
 
                         <!-- Quantity & Price -->
@@ -83,10 +88,10 @@
 
                         <!-- Actions -->
                         <div class="col-md-1">
-                            <button type="button" class="btn btn-link btn-danger p-0"
+                            <button type="button" class="btn-remove-cart"
                                     onclick="removeCartItem({{ $cartItem->id }})"
                                     title="Remove">
-                                <i class="fa fa-trash fa-lg"></i>
+                                <i class="fa fa-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -97,7 +102,7 @@
 
         <!-- Continue Shopping -->
         <div class="mt-3">
-            <a href="{{ route('catalog.index') }}" class="btn btn-secondary">
+            <a href="{{ route('catalog.index') }}" class="btn btn-outline-secondary">
                 <i class="fa fa-arrow-left"></i> Continue Shopping
             </a>
         </div>
@@ -354,13 +359,93 @@
 
 @push('styles')
 <style>
-    .cart-item {
-        transition: all 0.3s;
-    }
+.cart-item {
+    transition: all 0.3s;
+    border: 1px solid #e9ecef !important;
+}
 
-    .cart-item:hover {
-        background-color: #f8f9fa;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+.cart-item:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-color: #dee2e6 !important;
+}
+
+.cart-item-image {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cart-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
+
+.cart-placeholder i {
+    font-size: 2rem;
+    color: #adb5bd;
+}
+
+.badge-category-cart {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    background: #f8f9fa;
+    color: #495057;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-duration-cart {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    background: #e9ecef;
+    color: #495057;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.btn-remove-cart {
+    border: none;
+    background: #f8f9fa;
+    color: #6c757d;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-remove-cart:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.btn-outline-secondary {
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.card {
+    border: 1px solid #e9ecef;
+}
 </style>
 @endpush

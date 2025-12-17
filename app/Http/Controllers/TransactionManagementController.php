@@ -14,32 +14,38 @@ class TransactionManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Rental::with(['user', 'rentalItems.item.category', 'transaction'])
-            ->latest();
+        $query = Rental::with([
+            "user",
+            "rentalItems.item.category",
+            "transaction",
+        ])->latest();
 
         // Filter by status
-        if ($request->has('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
+        if ($request->has("status") && $request->status !== "all") {
+            $query->where("status", $request->status);
         }
 
         // Search by rental code, order ID, or user name
-        if ($request->has('search') && $request->search) {
+        if ($request->has("search") && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('rental_code', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('email', 'like', "%{$search}%");
+                $q->where("rental_code", "like", "%{$search}%")
+                    ->orWhereHas("user", function ($q) use ($search) {
+                        $q->where("name", "like", "%{$search}%")->orWhere(
+                            "email",
+                            "like",
+                            "%{$search}%",
+                        );
                     })
-                    ->orWhereHas('transaction', function ($q) use ($search) {
-                        $q->where('order_id', 'like', "%{$search}%");
+                    ->orWhereHas("transaction", function ($q) use ($search) {
+                        $q->where("order_id", "like", "%{$search}%");
                     });
             });
         }
 
         $rentals = $query->paginate(15);
 
-        return view('management.transactions.index', compact('rentals'));
+        return view("management.transactions.index", compact("rentals"));
     }
 
     /**
@@ -48,7 +54,7 @@ class TransactionManagementController extends Controller
     public function updateStatus(Request $request, Rental $rental)
     {
         $request->validate([
-            'status' => 'required|in:confirmed,on_rent,completed,cancelled'
+            "status" => "required|in:confirmed,on_rent,completed,cancelled",
         ]);
 
         $oldStatus = $rental->status;
@@ -57,34 +63,40 @@ class TransactionManagementController extends Controller
         DB::beginTransaction();
         try {
             // Update status
-            $rental->update(['status' => $newStatus]);
+            $rental->update(["status" => $newStatus]);
 
             // Set timestamp based on status
-            if ($newStatus === 'confirmed' && !$rental->confirmed_at) {
-                $rental->update(['confirmed_at' => now()]);
-            } elseif ($newStatus === 'on_rent' && !$rental->picked_up_at) {
-                $rental->update(['picked_up_at' => now()]);
-            } elseif ($newStatus === 'completed' && !$rental->returned_at) {
-                $rental->update(['returned_at' => now()]);
+            if ($newStatus === "confirmed" && !$rental->confirmed_at) {
+                $rental->update(["confirmed_at" => now()]);
+            } elseif ($newStatus === "on_rent" && !$rental->picked_up_at) {
+                $rental->update(["picked_up_at" => now()]);
+            } elseif ($newStatus === "completed" && !$rental->returned_at) {
+                $rental->update(["returned_at" => now()]);
 
-                // Restore stock when completed
+                // Restore available stock when completed
                 foreach ($rental->rentalItems as $rentalItem) {
-                    $rentalItem->item->increment('stock', $rentalItem->quantity);
+                    $rentalItem->item->increment(
+                        "available_stock",
+                        $rentalItem->quantity,
+                    );
                 }
             }
 
             DB::commit();
 
             return response()->json([
-                'success' => true,
-                'message' => 'Status berhasil diupdate'
+                "success" => true,
+                "message" => "Status berhasil diupdate",
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengupdate status: ' . $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Gagal mengupdate status: " . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -94,11 +106,13 @@ class TransactionManagementController extends Controller
     public function statistics()
     {
         $stats = [
-            'total' => Rental::count(),
-            'confirmed' => Rental::where('status', 'confirmed')->count(),
-            'on_rent' => Rental::where('status', 'on_rent')->count(),
-            'completed' => Rental::where('status', 'completed')->count(),
-            'total_revenue' => Rental::where('payment_status', 'paid')->sum('total_price'),
+            "total" => Rental::count(),
+            "confirmed" => Rental::where("status", "confirmed")->count(),
+            "on_rent" => Rental::where("status", "on_rent")->count(),
+            "completed" => Rental::where("status", "completed")->count(),
+            "total_revenue" => Rental::where("payment_status", "paid")->sum(
+                "total_price",
+            ),
         ];
 
         return response()->json($stats);
