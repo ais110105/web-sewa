@@ -30,7 +30,7 @@ class PrivilegedDashboardController extends Controller
                 "payment_status",
                 "unpaid",
             )->count(),
-            "low_stock_items" => Item::whereColumn(
+            "low_stock_items" => Item::where(
                 "available_stock",
                 "<=",
                 2,
@@ -43,7 +43,7 @@ class PrivilegedDashboardController extends Controller
             ->get();
 
         $lowStockItems = Item::with("category")
-            ->whereColumn("available_stock", "<=", 2)
+            ->where("available_stock", "<=", 2)
             ->orderBy("available_stock")
             ->take(5)
             ->get();
