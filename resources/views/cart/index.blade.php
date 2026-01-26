@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'My Cart - Web Sewa')
+@section('title', 'Keranjang Saya - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">My Cart</h3>
+    <h3 class="fw-bold mb-3">Keranjang Saya</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">My Cart</a>
+            <a href="#">Keranjang</a>
         </li>
     </ul>
 </div>
@@ -27,9 +27,9 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="card-title mb-0">Cart Items ({{ $cartItems->count() }})</h4>
+                    <h4 class="card-title mb-0">Barang di Keranjang ({{ $cartItems->count() }})</h4>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearCart()">
-                        <i class="fa fa-trash"></i> Clear Cart
+                        <i class="fa fa-trash"></i> Kosongkan
                     </button>
                 </div>
             </div>
@@ -54,17 +54,17 @@
                         <div class="col-md-4">
                             <h6 class="mb-1">{{ $cartItem->item->name }}</h6>
                             <small class="text-muted">
-                                <span class="badge-category-cart">{{ $cartItem->item->category?->name ?? 'Uncategorized' }}</span>
+                                <span class="badge-category-cart">{{ $cartItem->item->category?->name ?? 'Tanpa Kategori' }}</span>
                             </small>
                             <p class="mb-0 mt-1">
                                 <strong>Rp {{ number_format($cartItem->item->price_per_period, 0, ',', '.') }}</strong>
-                                <small class="text-muted">/period</small>
+                                <small class="text-muted">/periode</small>
                             </p>
                         </div>
 
                         <!-- Rental Period -->
                         <div class="col-md-3">
-                            <small class="text-muted d-block">Rental Period</small>
+                            <small class="text-muted d-block">Periode Sewa</small>
                             <p class="mb-0">
                                 <i class="fa fa-calendar"></i>
                                 {{ $cartItem->start_date->format('d M Y') }}
@@ -73,12 +73,12 @@
                                 <i class="fa fa-calendar"></i>
                                 {{ $cartItem->end_date->format('d M Y') }}
                             </p>
-                            <small class="badge-duration-cart">{{ $cartItem->duration_days }} days</small>
+                            <small class="badge-duration-cart">{{ $cartItem->duration_days }} hari</small>
                         </div>
 
                         <!-- Quantity & Price -->
                         <div class="col-md-2">
-                            <small class="text-muted d-block">Quantity</small>
+                            <small class="text-muted d-block">Jumlah</small>
                             <p class="mb-1"><strong>{{ $cartItem->quantity }}x</strong></p>
                             <small class="text-muted d-block mt-2">Subtotal</small>
                             <h6 class="text-primary mb-0">
@@ -90,7 +90,7 @@
                         <div class="col-md-1">
                             <button type="button" class="btn-remove-cart"
                                     onclick="removeCartItem({{ $cartItem->id }})"
-                                    title="Remove">
+                                    title="Hapus">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -103,7 +103,7 @@
         <!-- Continue Shopping -->
         <div class="mt-3">
             <a href="{{ route('catalog.index') }}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left"></i> Continue Shopping
+                <i class="fa fa-arrow-left"></i> Lanjut Belanja
             </a>
         </div>
     </div>
@@ -112,7 +112,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Order Summary</h4>
+                <h4 class="card-title mb-0">Ringkasan Pesanan</h4>
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
@@ -124,27 +124,27 @@
                 <div class="alert alert-info">
                     <small>
                         <i class="fa fa-info-circle"></i>
-                        You will be redirected to payment after checkout
+                        Anda akan diarahkan ke pembayaran setelah checkout
                     </small>
                 </div>
 
                 <div class="alert alert-warning">
                     <small>
-                        <strong>Sandbox Mode:</strong> Testing with Midtrans Sandbox.
+                        <strong>Mode Sandbox:</strong> Pengujian dengan Midtrans Sandbox.
                         <br>
-                        If payment error occurs, check <strong>MIDTRANS_SETUP.md</strong>
+                        Jika terjadi error pembayaran, periksa <strong>MIDTRANS_SETUP.md</strong>
                     </small>
                 </div>
 
                 <div class="mb-3">
-                    <label for="notes" class="form-label">Notes (Optional)</label>
+                    <label for="notes" class="form-label">Catatan (Opsional)</label>
                     <textarea class="form-control" id="notes" rows="3"
-                              placeholder="Add any special instructions..."></textarea>
+                              placeholder="Tambahkan instruksi khusus..."></textarea>
                 </div>
 
                 <div class="d-grid">
                     <button type="button" class="btn btn-primary btn-lg" onclick="processCheckout()">
-                        <i class="fa fa-credit-card"></i> Proceed to Checkout
+                        <i class="fa fa-credit-card"></i> Lanjut ke Pembayaran
                     </button>
                 </div>
             </div>
@@ -153,14 +153,14 @@
         <!-- Info Card -->
         <div class="card mt-3">
             <div class="card-body">
-                <h6 class="mb-2"><i class="fa fa-shield-alt text-success"></i> Secure Checkout</h6>
+                <h6 class="mb-2"><i class="fa fa-shield-alt text-success"></i> Pembayaran Aman</h6>
                 <small class="text-muted">
-                    Your payment information is secure and encrypted
+                    Informasi pembayaran Anda aman dan terenkripsi
                 </small>
                 <hr>
-                <h6 class="mb-2"><i class="fa fa-clock text-info"></i> Flexible Rental</h6>
+                <h6 class="mb-2"><i class="fa fa-clock text-info"></i> Sewa Fleksibel</h6>
                 <small class="text-muted">
-                    Choose your rental period based on your needs
+                    Pilih periode sewa sesuai kebutuhan Anda
                 </small>
             </div>
         </div>
@@ -171,10 +171,10 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="fa fa-shopping-cart fa-5x text-muted mb-3"></i>
-                <h4>Your cart is empty</h4>
-                <p class="text-muted">Browse our catalog and add items to your cart</p>
+                <h4>Keranjang Anda kosong</h4>
+                <p class="text-muted">Jelajahi katalog dan tambahkan barang ke keranjang Anda</p>
                 <a href="{{ route('catalog.index') }}" class="btn btn-primary">
-                    <i class="fa fa-shopping-bag"></i> Browse Catalog
+                    <i class="fa fa-shopping-bag"></i> Jelajahi Katalog
                 </a>
             </div>
         </div>

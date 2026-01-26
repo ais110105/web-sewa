@@ -3,7 +3,9 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="white">
             <a href="{{ route('home') }}" class="logo">
-                <img src="{{ asset('storage/20251217_225404.png') }}" alt="navbar brand" class="navbar-brand" style="height: 40px; width: auto; object-fit: contain;" />
+                @if(file_exists(storage_path('app/public/20251217_225404.png')))
+                    <img src="{{ asset('storage/20251217_225404.png') }}" alt="navbar brand" class="navbar-brand" style="height: 40px; width: auto; object-fit: contain;" />
+                @endif
                 <span class="logo-text">Tirta Kesuma</span>
             </a>
             <div class="nav-toggle">
@@ -27,14 +29,14 @@
                 <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}">
                         <i class="fas fa-home"></i>
-                        <p>Dashboard</p>
+                        <p>Dasbor</p>
                     </a>
                 </li>
                 @else
                 <li class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
                     <a href="{{ route('home') }}">
                         <i class="fas fa-home"></i>
-                        <p>Dashboard</p>
+                        <p>Dasbor</p>
                     </a>
                 </li>
                 @endcan
@@ -52,7 +54,7 @@
                 <li class="nav-item {{ request()->routeIs('catalog.*') ? 'active' : '' }}">
                     <a href="{{ route('catalog.index') }}">
                         <i class="fas fa-shopping-bag"></i>
-                        <p>Catalog</p>
+                        <p>Katalog</p>
                     </a>
                 </li>
                 @endcan
@@ -61,7 +63,7 @@
                 <li class="nav-item {{ request()->routeIs('cart.*') ? 'active' : '' }}">
                     <a href="{{ route('cart.index') }}">
                         <i class="fas fa-shopping-cart"></i>
-                        <p>My Cart</p>
+                        <p>Keranjang Saya</p>
                     </a>
                 </li>
                 @endcan
@@ -70,7 +72,7 @@
                 <li class="nav-item {{ request()->routeIs('items.*') ? 'active' : '' }}">
                     <a href="{{ route('items.index') }}">
                         <i class="fas fa-box"></i>
-                        <p>Items Management</p>
+                        <p>Kelola Barang</p>
                     </a>
                 </li>
                 @endcan
@@ -81,7 +83,7 @@
                 <li class="nav-item {{ request()->routeIs('checkout.*') ? 'active' : '' }}">
                     <a href="{{ route('checkout.history') }}">
                         <i class="fas fa-clipboard-list"></i>
-                        <p>My Rentals</p>
+                        <p>Penyewaan Saya</p>
                     </a>
                 </li>
                 @endcannot
@@ -92,7 +94,7 @@
                 <li class="nav-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
                     <a href="{{ route('transactions.index') }}">
                         <i class="fas fa-clipboard-list"></i>
-                        <p>Transaction Management</p>
+                        <p>Kelola Transaksi</p>
                     </a>
                 </li>
                 @endcanany
@@ -102,7 +104,7 @@
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Management</h4>
+                    <h4 class="text-section">Manajemen</h4>
                 </li>
                 @endcanany
 
@@ -110,7 +112,7 @@
                 <li class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
                     <a href="{{ route('categories.index') }}">
                         <i class="fas fa-tags"></i>
-                        <p>Categories</p>
+                        <p>Kategori</p>
                     </a>
                 </li>
                 @endcan
@@ -119,7 +121,7 @@
                 <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}">
                         <i class="fas fa-users"></i>
-                        <p>Users</p>
+                        <p>Pengguna</p>
                     </a>
                 </li>
                 @endcan
@@ -128,7 +130,7 @@
                 <li class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
                     <a href="{{ route('roles.index') }}">
                         <i class="fas fa-user-tag"></i>
-                        <p>Roles</p>
+                        <p>Peran</p>
                     </a>
                 </li>
                 @endcan
@@ -137,7 +139,7 @@
                 <li class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
                     <a href="{{ route('permissions.index') }}">
                         <i class="fas fa-shield-alt"></i>
-                        <p>Permissions</p>
+                        <p>Hak Akses</p>
                     </a>
                 </li>
                 @endcan

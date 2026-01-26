@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Category Management - Web Sewa')
+@section('title', 'Kelola Kategori - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Category Management</h3>
+    <h3 class="fw-bold mb-3">Kelola Kategori</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Categories</a>
+            <a href="#">Kategori</a>
         </li>
     </ul>
 </div>
@@ -25,11 +25,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h4 class="card-title">Category List</h4>
+                    <h4 class="card-title">Daftar Kategori</h4>
                     @can('create-categories')
                     <button class="btn btn-primary btn-round ms-auto" onclick="openCreateForm()">
                         <i class="fa fa-plus"></i>
-                        Add Category
+                        Tambah Kategori
                     </button>
                     @endcan
                 </div>
@@ -39,10 +39,10 @@
                     <table id="categories-table" class="display table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Created At</th>
-                                <th style="width: 10%">Action</th>
+                                <th>Nama</th>
+                                <th>Deskripsi</th>
+                                <th>Dibuat</th>
+                                <th style="width: 10%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,8 +81,8 @@
 <!-- Offcanvas Form -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="categoryOffcanvas" aria-labelledby="categoryOffcanvasLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="categoryOffcanvasLabel">Add Category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="categoryOffcanvasLabel">Tambah Kategori</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
     </div>
     <div class="offcanvas-body">
         <form id="categoryForm">
@@ -91,23 +91,23 @@
             <input type="hidden" id="formMethod" value="POST">
 
             <div class="mb-3">
-                <label for="name" class="form-label">Category Name <span class="text-danger">*</span></label>
+                <label for="name" class="form-label">Nama Kategori <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="name" name="name" required>
                 <div class="invalid-feedback" id="nameError"></div>
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
+                <label for="description" class="form-label">Deskripsi</label>
                 <textarea class="form-control" id="description" name="description" rows="4"></textarea>
                 <div class="invalid-feedback" id="descriptionError"></div>
             </div>
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Save Category
+                    <i class="fa fa-save"></i> Simpan Kategori
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">
-                    Cancel
+                    Batal
                 </button>
             </div>
         </form>

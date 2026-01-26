@@ -130,7 +130,7 @@
                                             @if($transaction->rental)
                                                 @if($transaction->rental->status === 'pending')
                                                     <span class="badge badge-warning">
-                                                        <i class="fas fa-clock"></i> Pending
+                                                        <i class="fas fa-clock"></i> Menunggu
                                                     </span>
                                                 @elseif($transaction->rental->status === 'confirmed')
                                                     <span class="badge badge-info">
@@ -152,7 +152,7 @@
                                         <td>
                                             @if($transaction->status === 'pending')
                                                 <span class="badge badge-warning">
-                                                    <i class="fas fa-hourglass-half"></i> Pending
+                                                    <i class="fas fa-hourglass-half"></i> Menunggu
                                                 </span>
                                             @elseif($transaction->status === 'settlement')
                                                 <span class="badge badge-success">
@@ -160,7 +160,7 @@
                                                 </span>
                                             @elseif($transaction->status === 'expire')
                                                 <span class="badge badge-danger">
-                                                    <i class="fas fa-clock"></i> Expired
+                                                    <i class="fas fa-clock"></i> Kedaluwarsa
                                                 </span>
                                             @elseif($transaction->status === 'cancel')
                                                 <span class="badge badge-danger">
@@ -253,11 +253,11 @@
                     <td class="text-muted">Status</td>
                     <td>
                         @if($transaction->status === 'pending')
-                            <span class="badge badge-warning">Pending</span>
+                            <span class="badge badge-warning">Menunggu</span>
                         @elseif($transaction->status === 'settlement')
                             <span class="badge badge-success">Lunas</span>
                         @elseif($transaction->status === 'expire')
-                            <span class="badge badge-danger">Expired</span>
+                            <span class="badge badge-danger">Kedaluwarsa</span>
                         @elseif($transaction->status === 'cancel')
                             <span class="badge badge-danger">Dibatalkan</span>
                         @elseif($transaction->status === 'deny')

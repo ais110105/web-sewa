@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Web Sewa')
+@section('title', 'Dasbor - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Management Dashboard</h3>
+    <h3 class="fw-bold mb-3">Dasbor Manajemen</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Dashboard</a>
+            <a href="#">Dasbor</a>
         </li>
     </ul>
 </div>
@@ -28,7 +28,7 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Total Users</div>
+                <div class="stat-label">Total Pengguna</div>
                 <div class="stat-value">{{ $stats['total_users'] }}</div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <i class="fas fa-box"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Total Items</div>
+                <div class="stat-label">Total Barang</div>
                 <div class="stat-value">{{ $stats['total_items'] }}</div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <i class="fas fa-clipboard-check"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Active Rentals</div>
+                <div class="stat-label">Penyewaan Aktif</div>
                 <div class="stat-value">{{ $stats['active_rentals'] }}</div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Total Revenue</div>
+                <div class="stat-label">Total Pendapatan</div>
                 <div class="stat-value">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</div>
             </div>
         </div>
@@ -72,25 +72,25 @@
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="stat-card-secondary">
-            <div class="stat-secondary-label">Pending Rentals</div>
+            <div class="stat-secondary-label">Penyewaan Menunggu</div>
             <div class="stat-secondary-value">{{ $stats['pending_rentals'] }}</div>
         </div>
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card-secondary">
-            <div class="stat-secondary-label">Completed Rentals</div>
+            <div class="stat-secondary-label">Penyewaan Selesai</div>
             <div class="stat-secondary-value">{{ $stats['completed_rentals'] }}</div>
         </div>
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card-secondary">
-            <div class="stat-secondary-label">Pending Payments</div>
+            <div class="stat-secondary-label">Pembayaran Tertunda</div>
             <div class="stat-secondary-value">{{ $stats['pending_payments'] }}</div>
         </div>
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card-secondary alert-card">
-            <div class="stat-secondary-label">Low Stock Items</div>
+            <div class="stat-secondary-label">Stok Menipis</div>
             <div class="stat-secondary-value">{{ $stats['low_stock_items'] }}</div>
         </div>
     </div>
@@ -101,8 +101,8 @@
     <div class="col-lg-8">
         <div class="data-card">
             <div class="data-card-header">
-                <h5 class="data-card-title">Recent Rentals</h5>
-                <a href="{{ route('transactions.index') }}" class="btn-view-all">View All</a>
+                <h5 class="data-card-title">Penyewaan Terbaru</h5>
+                <a href="{{ route('transactions.index') }}" class="btn-view-all">Lihat Semua</a>
             </div>
             <div class="data-card-body">
                 @if($recentRentals->count() > 0)
@@ -110,10 +110,10 @@
                     <table class="table-minimal">
                         <thead>
                             <tr>
-                                <th>Rental Code</th>
-                                <th>Customer</th>
-                                <th>Item</th>
-                                <th>Date</th>
+                                <th>Kode Sewa</th>
+                                <th>Pelanggan</th>
+                                <th>Barang</th>
+                                <th>Tanggal</th>
                                 <th>Status</th>
                                 <th>Total</th>
                             </tr>
@@ -145,13 +145,13 @@
                                 </td>
                                 <td>
                                     @if($rental->status === 'pending')
-                                        <span class="badge-status badge-pending">Pending</span>
+                                        <span class="badge-status badge-pending">Menunggu</span>
                                     @elseif($rental->status === 'confirmed')
-                                        <span class="badge-status badge-confirmed">Confirmed</span>
+                                        <span class="badge-status badge-confirmed">Dikonfirmasi</span>
                                     @elseif($rental->status === 'on_rent')
-                                        <span class="badge-status badge-active">Active</span>
+                                        <span class="badge-status badge-active">Aktif</span>
                                     @else
-                                        <span class="badge-status badge-completed">Completed</span>
+                                        <span class="badge-status badge-completed">Selesai</span>
                                     @endif
                                 </td>
                                 <td>
@@ -165,7 +165,7 @@
                 @else
                 <div class="empty-state-minimal">
                     <i class="fas fa-clipboard-list"></i>
-                    <p>No recent rentals</p>
+                    <p>Belum ada penyewaan terbaru</p>
                 </div>
                 @endif
             </div>
@@ -176,7 +176,7 @@
     <div class="col-lg-4">
         <div class="data-card">
             <div class="data-card-header">
-                <h5 class="data-card-title">Low Stock Alert</h5>
+                <h5 class="data-card-title">Peringatan Stok Menipis</h5>
             </div>
             <div class="data-card-body">
                 @if($lowStockItems->count() > 0)
@@ -199,7 +199,7 @@
                 @else
                 <div class="empty-state-minimal">
                     <i class="fas fa-check-circle"></i>
-                    <p>All items have sufficient stock</p>
+                    <p>Semua barang memiliki stok cukup</p>
                 </div>
                 @endif
             </div>
