@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'User Management - Web Sewa')
+@section('title', 'Kelola Pengguna - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">User Management</h3>
+    <h3 class="fw-bold mb-3">Kelola Pengguna</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Users</a>
+            <a href="#">Pengguna</a>
         </li>
     </ul>
 </div>
@@ -25,11 +25,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h4 class="card-title">User List</h4>
+                    <h4 class="card-title">Daftar Pengguna</h4>
                     @can('create-users')
                     <button class="btn btn-primary btn-round ms-auto" onclick="openCreateForm()">
                         <i class="fa fa-plus"></i>
-                        Add User
+                        Tambah Pengguna
                     </button>
                     @endcan
                 </div>
@@ -39,11 +39,11 @@
                     <table id="users-table" class="display table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Nama</th>
                                 <th>Email</th>
-                                <th>Role</th>
-                                <th>Created At</th>
-                                <th style="width: 10%">Action</th>
+                                <th>Peran</th>
+                                <th>Dibuat</th>
+                                <th style="width: 10%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,7 +55,7 @@
                                     @if($user->roles->isNotEmpty())
                                         <span class="badge badge-primary">{{ $user->roles->first()->name }}</span>
                                     @else
-                                        <span class="badge badge-secondary">No Role</span>
+                                        <span class="badge badge-secondary">Tanpa Peran</span>
                                     @endif
                                 </td>
                                 <td>{{ $user->created_at->format('d M Y') }}</td>
@@ -91,8 +91,8 @@
 <!-- Offcanvas Form -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="userOffcanvas" aria-labelledby="userOffcanvasLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="userOffcanvasLabel">Add User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="userOffcanvasLabel">Tambah Pengguna</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
     </div>
     <div class="offcanvas-body">
         <form id="userForm">
@@ -101,7 +101,7 @@
             <input type="hidden" id="formMethod" value="POST">
 
             <div class="mb-3">
-                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="name" name="name" required>
                 <div class="invalid-feedback" id="nameError"></div>
             </div>
@@ -113,9 +113,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                <label for="role" class="form-label">Peran <span class="text-danger">*</span></label>
                 <select class="form-select" id="role" name="role" required>
-                    <option value="">Select Role</option>
+                    <option value="">Pilih Peran</option>
                     @foreach($roles as $role)
                     <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
                     @endforeach
@@ -124,23 +124,23 @@
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password <span class="text-danger" id="passwordRequired">*</span></label>
+                <label for="password" class="form-label">Kata Sandi <span class="text-danger" id="passwordRequired">*</span></label>
                 <input type="password" class="form-control" id="password" name="password">
-                <small class="form-text text-muted" id="passwordHint">Leave empty to keep current password</small>
+                <small class="form-text text-muted" id="passwordHint">Kosongkan untuk mempertahankan kata sandi saat ini</small>
                 <div class="invalid-feedback" id="passwordError"></div>
             </div>
 
             <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
             </div>
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Save User
+                    <i class="fa fa-save"></i> Simpan Pengguna
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">
-                    Cancel
+                    Batal
                 </button>
             </div>
         </form>

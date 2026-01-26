@@ -3,7 +3,9 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="white">
             <a href="{{ route('home') }}" class="logo">
-                <img src="{{ asset('storage/20251217_225404.png') }}" alt="navbar brand" class="navbar-brand" style="height: 40px; width: auto; object-fit: contain;" />
+                @if(file_exists(storage_path('app/public/20251217_225404.png')))
+                    <img src="{{ asset('storage/20251217_225404.png') }}" alt="navbar brand" class="navbar-brand" style="height: 40px; width: auto; object-fit: contain;" />
+                @endif
                 <span class="logo-text">Tirta Kesuma</span>
             </a>
             <div class="nav-toggle">
@@ -30,7 +32,7 @@
                             <img src="{{ asset('template/assets/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle" />
                         </div>
                         <span class="profile-username">
-                            <span class="op-7">Hi,</span>
+                            <span class="op-7">Halo,</span>
                             <span class="fw-bold">{{ Auth::user()->name }}</span>
                         </span>
                     </a>
@@ -53,13 +55,13 @@
                             <li>
                                 <div class="dropdown-divider"></div>
                                 <a href="{{ route('profile.index') }}" class="dropdown-item">
-                                    <i class="fas fa-user"></i> My Profile
+                                    <i class="fas fa-user"></i> Profil Saya
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); confirmAction('Are you sure you want to logout?', function() { document.getElementById('logoutForm').submit(); });">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); confirmAction('Apakah Anda yakin ingin keluar?', function() { document.getElementById('logoutForm').submit(); });">
+                                        <i class="fas fa-sign-out-alt"></i> Keluar
                                     </a>
                                 </form>
                             </li>

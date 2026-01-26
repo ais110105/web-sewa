@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Role Management - Web Sewa')
+@section('title', 'Kelola Peran - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Role Management</h3>
+    <h3 class="fw-bold mb-3">Kelola Peran</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Roles</a>
+            <a href="#">Peran</a>
         </li>
     </ul>
 </div>
@@ -25,11 +25,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h4 class="card-title">Role List</h4>
+                    <h4 class="card-title">Daftar Peran</h4>
                     @can('create-roles')
                     <button class="btn btn-primary btn-round ms-auto" onclick="openCreateForm()">
                         <i class="fa fa-plus"></i>
-                        Add Role
+                        Tambah Peran
                     </button>
                     @endcan
                 </div>
@@ -39,19 +39,19 @@
                     <table class="display table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Role Name</th>
-                                <th>Permissions Count</th>
-                                <th>Users Count</th>
-                                <th>Created At</th>
-                                <th style="width: 10%">Action</th>
+                                <th>Nama Peran</th>
+                                <th>Jumlah Hak Akses</th>
+                                <th>Jumlah Pengguna</th>
+                                <th>Dibuat</th>
+                                <th style="width: 10%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($roles as $role)
                             <tr>
                                 <td><span class="badge badge-primary">{{ ucfirst($role->name) }}</span></td>
-                                <td>{{ $role->permissions_count }} permissions</td>
-                                <td>{{ $role->users_count }} users</td>
+                                <td>{{ $role->permissions_count }} hak akses</td>
+                                <td>{{ $role->users_count }} pengguna</td>
                                 <td>{{ $role->created_at->format('d M Y') }}</td>
                                 <td>
                                     <div class="form-button-action">
@@ -83,8 +83,8 @@
 <!-- Offcanvas Form -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="roleOffcanvas" style="width: 500px;" aria-labelledby="roleOffcanvasLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="roleOffcanvasLabel">Add Role</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="roleOffcanvasLabel">Tambah Peran</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
     </div>
     <div class="offcanvas-body">
         <form id="roleForm">
@@ -93,14 +93,14 @@
             <input type="hidden" id="formMethod" value="POST">
 
             <div class="mb-3">
-                <label for="name" class="form-label">Role Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="name" name="name" required placeholder="e.g., manager">
-                <small class="form-text text-muted">Use lowercase, no spaces</small>
+                <label for="name" class="form-label">Nama Peran <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required placeholder="contoh: manajer">
+                <small class="form-text text-muted">Gunakan huruf kecil, tanpa spasi</small>
                 <div class="invalid-feedback" id="nameError"></div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Permissions</label>
+                <label class="form-label">Hak Akses</label>
                 <div class="permissions-container" style="max-height: 400px; overflow-y: auto;">
                     @foreach($permissions as $group => $perms)
                     <div class="mb-3">
@@ -120,10 +120,10 @@
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Save Role
+                    <i class="fa fa-save"></i> Simpan Peran
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">
-                    Cancel
+                    Batal
                 </button>
             </div>
         </form>

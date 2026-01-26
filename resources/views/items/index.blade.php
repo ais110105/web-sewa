@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Item Management - Web Sewa')
+@section('title', 'Kelola Barang - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Item Management</h3>
+    <h3 class="fw-bold mb-3">Kelola Barang</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Items</a>
+            <a href="#">Barang</a>
         </li>
     </ul>
 </div>
@@ -25,11 +25,11 @@
         <div class="card modern-card">
             <div class="card-header border-0">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="card-title mb-0">Item List</h4>
+                    <h4 class="card-title mb-0">Daftar Barang</h4>
                     @can('create-items')
                     <button class="btn btn-primary btn-round" onclick="openCreateForm()">
                         <i class="fa fa-plus"></i>
-                        Add Item
+                        Tambah Barang
                     </button>
                     @endcan
                 </div>
@@ -38,12 +38,12 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <div class="search-box">
-                            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Filter items...">
+                            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Cari barang...">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <select id="categoryFilter" class="form-select form-select-lg">
-                            <option value="">All Categories</option>
+                            <option value="">Semua Kategori</option>
                             @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -51,10 +51,10 @@
                     </div>
                     <div class="col-md-3">
                         <select id="statusFilter" class="form-select form-select-lg">
-                            <option value="">All Status</option>
-                            <option value="available">Available</option>
-                            <option value="rented">Rented</option>
-                            <option value="maintenance">Maintenance</option>
+                            <option value="">Semua Status</option>
+                            <option value="available">Tersedia</option>
+                            <option value="rented">Disewa</option>
+                            <option value="maintenance">Perawatan</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -74,13 +74,13 @@
                                     <input type="checkbox" id="selectAll" class="form-check-input">
                                 </th>
                                 <th style="width: 50px;">#</th>
-                                <th>Image</th>
-                                <th>Name <i class="fas fa-sort sort-icon" data-column="name"></i></th>
-                                <th>Category</th>
-                                <th>Price/Period <i class="fas fa-sort sort-icon" data-column="price"></i></th>
-                                <th>Stock</th>
+                                <th>Gambar</th>
+                                <th>Nama <i class="fas fa-sort sort-icon" data-column="name"></i></th>
+                                <th>Kategori</th>
+                                <th>Harga/Periode <i class="fas fa-sort sort-icon" data-column="price"></i></th>
+                                <th>Stok</th>
                                 <th>Status</th>
-                                <th style="width: 100px;">Actions</th>
+                                <th style="width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="itemsTableBody">
@@ -111,11 +111,11 @@
                                 </td>
                                 <td>
                                     @if($item->status === 'available')
-                                        <span class="badge badge-status badge-success">Available</span>
+                                        <span class="badge badge-status badge-success">Tersedia</span>
                                     @elseif($item->status === 'rented')
-                                        <span class="badge badge-status badge-warning">Rented</span>
+                                        <span class="badge badge-status badge-warning">Disewa</span>
                                     @else
-                                        <span class="badge badge-status badge-secondary">Maintenance</span>
+                                        <span class="badge badge-status badge-secondary">Perawatan</span>
                                     @endif
                                 </td>
                                 <td>
@@ -138,7 +138,7 @@
                                 <td colspan="9" class="text-center py-5">
                                     <div class="empty-state">
                                         <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                                        <p class="text-muted">No items found</p>
+                                        <p class="text-muted">Tidak ada barang ditemukan</p>
                                     </div>
                                 </td>
                             </tr>
@@ -164,8 +164,8 @@
 <!-- Offcanvas Form -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="itemOffcanvas" aria-labelledby="itemOffcanvasLabel" style="width: 500px;">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="itemOffcanvasLabel">Add Item</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="itemOffcanvasLabel">Tambah Barang</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
     </div>
     <div class="offcanvas-body">
         <form id="itemForm" enctype="multipart/form-data">
@@ -175,25 +175,25 @@
 
             <!-- Image Upload -->
             <div class="mb-4">
-                <label class="form-label">Item Image</label>
+                <label class="form-label">Gambar Barang</label>
                 <div class="image-upload-container">
                     <div class="image-preview" id="imagePreview">
                         <i class="fas fa-image fa-3x text-muted"></i>
-                        <p class="text-muted mt-2">Click to upload image</p>
+                        <p class="text-muted mt-2">Klik untuk upload gambar</p>
                     </div>
                     <input type="file" class="d-none" id="photo" name="photo" accept="image/*" onchange="previewImage(event)">
                     <button type="button" class="btn btn-outline-primary w-100 mt-2" onclick="document.getElementById('photo').click()">
-                        <i class="fas fa-upload"></i> Choose Image
+                        <i class="fas fa-upload"></i> Pilih Gambar
                     </button>
-                    <small class="form-text text-muted">Max size: 2MB. Format: JPG, PNG, WEBP</small>
+                    <small class="form-text text-muted">Maks: 2MB. Format: JPG, PNG, WEBP</small>
                 </div>
                 <div class="invalid-feedback" id="photoError"></div>
             </div>
 
             <div class="mb-3">
-                <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                <label for="category_id" class="form-label">Kategori <span class="text-danger">*</span></label>
                 <select class="form-select" id="category_id" name="category_id" required>
-                    <option value="">Select Category</option>
+                    <option value="">Pilih Kategori</option>
                     @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
@@ -202,32 +202,32 @@
             </div>
 
             <div class="mb-3">
-                <label for="name" class="form-label">Item Name <span class="text-danger">*</span></label>
+                <label for="name" class="form-label">Nama Barang <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="name" name="name" required>
                 <div class="invalid-feedback" id="nameError"></div>
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
+                <label for="description" class="form-label">Deskripsi</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                 <div class="invalid-feedback" id="descriptionError"></div>
             </div>
 
             <div class="mb-3">
-                <label for="price_per_period" class="form-label">Price per Period <span class="text-danger">*</span></label>
+                <label for="price_per_period" class="form-label">Harga per Periode <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" id="price_per_period" name="price_per_period" required min="0" step="0.01">
-                <small class="form-text text-muted">Enter price in Rupiah</small>
+                <small class="form-text text-muted">Masukkan harga dalam Rupiah</small>
                 <div class="invalid-feedback" id="price_per_periodError"></div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="stock" class="form-label">Total Stock <span class="text-danger">*</span></label>
+                    <label for="stock" class="form-label">Stok Total <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="stock" name="stock" required min="0">
                     <div class="invalid-feedback" id="stockError"></div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="available_stock" class="form-label">Available Stock <span class="text-danger">*</span></label>
+                    <label for="available_stock" class="form-label">Stok Tersedia <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="available_stock" name="available_stock" required min="0">
                     <div class="invalid-feedback" id="available_stockError"></div>
                 </div>
@@ -236,19 +236,19 @@
             <div class="mb-3">
                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                 <select class="form-select" id="status" name="status" required>
-                    <option value="available">Available</option>
-                    <option value="rented">Rented</option>
-                    <option value="maintenance">Maintenance</option>
+                    <option value="available">Tersedia</option>
+                    <option value="rented">Disewa</option>
+                    <option value="maintenance">Perawatan</option>
                 </select>
                 <div class="invalid-feedback" id="statusError"></div>
             </div>
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Save Item
+                    <i class="fa fa-save"></i> Simpan Barang
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">
-                    Cancel
+                    Batal
                 </button>
             </div>
         </form>

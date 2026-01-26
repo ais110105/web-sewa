@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Catalog - Web Sewa')
+@section('title', 'Katalog - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Catalog</h3>
+    <h3 class="fw-bold mb-3">Katalog</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Catalog</a>
+            <a href="#">Katalog</a>
         </li>
     </ul>
 </div>
@@ -29,12 +29,12 @@
                     <!-- Search -->
                     <div class="search-catalog">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search items...">
+                        <input type="text" id="searchInput" placeholder="Cari barang...">
                     </div>
 
                     <!-- Category Filter -->
                     <select id="categoryFilter" class="filter-select">
-                        <option value="">All Categories</option>
+                        <option value="">Semua Kategori</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
@@ -44,24 +44,24 @@
 
                     <!-- Sort -->
                     <select id="sortFilter" class="filter-select">
-                        <option value="">Latest</option>
+                        <option value="">Terbaru</option>
                         <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
-                            Price: Low to High
+                            Harga: Terendah
                         </option>
                         <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
-                            Price: High to Low
+                            Harga: Tertinggi
                         </option>
-                        <option value="name_asc">Name: A-Z</option>
-                        <option value="name_desc">Name: Z-A</option>
+                        <option value="name_asc">Nama: A-Z</option>
+                        <option value="name_desc">Nama: Z-A</option>
                     </select>
                 </div>
 
                 <!-- View Toggle -->
                 <div class="view-toggle">
-                    <button class="view-btn active" data-view="grid" title="Grid View">
+                    <button class="view-btn active" data-view="grid" title="Tampilan Grid">
                         <i class="fas fa-th"></i>
                     </button>
-                    <button class="view-btn" data-view="list" title="List View">
+                    <button class="view-btn" data-view="list" title="Tampilan List">
                         <i class="fas fa-list"></i>
                     </button>
                 </div>
@@ -87,25 +87,25 @@
                                 </div>
                             @endif
                             @if($item->status === 'available')
-                                <span class="status-badge">Available</span>
+                                <span class="status-badge">Tersedia</span>
                             @else
-                                <span class="status-badge unavailable">Unavailable</span>
+                                <span class="status-badge unavailable">Tidak Tersedia</span>
                             @endif
                         </div>
 
                         <!-- Content -->
                         <div class="item-content">
-                            <div class="item-category">{{ $item->category?->name ?? 'Uncategorized' }}</div>
+                            <div class="item-category">{{ $item->category?->name ?? 'Tanpa Kategori' }}</div>
                             <h3 class="item-title">{{ $item->name }}</h3>
                             <p class="item-description">{{ Str::limit($item->description, 100) }}</p>
 
                             <div class="item-footer">
                                 <div class="item-price">
-                                    <span class="price-label">Price/Period</span>
+                                    <span class="price-label">Harga/Periode</span>
                                     <span class="price-value">Rp {{ number_format($item->price_per_period, 0, ',', '.') }}</span>
                                 </div>
                                 <a href="{{ route('catalog.show', $item->id) }}" class="btn-view">
-                                    View Details
+                                    Lihat Detail
                                 </a>
                             </div>
                         </div>
@@ -121,8 +121,8 @@
         @else
             <div class="empty-catalog">
                 <i class="fas fa-inbox"></i>
-                <h4>No items found</h4>
-                <p>Try adjusting your filters or search term</p>
+                <h4>Tidak ada barang ditemukan</h4>
+                <p>Coba ubah filter atau kata pencarian Anda</p>
             </div>
         @endif
     </div>

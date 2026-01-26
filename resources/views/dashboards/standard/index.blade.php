@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Web Sewa')
+@section('title', 'Dasbor - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Welcome, {{ Auth::user()->name }}!</h3>
+    <h3 class="fw-bold mb-3">Selamat Datang, {{ Auth::user()->name }}!</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('home') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Dashboard</a>
+            <a href="#">Dasbor</a>
         </li>
     </ul>
 </div>
@@ -28,7 +28,7 @@
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="stat-content-minimal">
-                <div class="stat-label-minimal">Total Rentals</div>
+                <div class="stat-label-minimal">Total Penyewaan</div>
                 <div class="stat-value-minimal">{{ $totalRentals }}</div>
             </div>
         </div>
@@ -70,7 +70,7 @@
 
 <!-- Quick Actions -->
 <div class="quick-actions-section">
-    <h5 class="section-title-minimal">Quick Actions</h5>
+    <h5 class="section-title-minimal">Aksi Cepat</h5>
     <div class="row g-3">
         @can('view-catalog')
         <div class="col-md-3 col-sm-6">
@@ -78,7 +78,7 @@
                 <div class="action-icon-minimal">
                     <i class="fas fa-shopping-bag"></i>
                 </div>
-                <div class="action-label-minimal">Browse Catalog</div>
+                <div class="action-label-minimal">Jelajahi Katalog</div>
             </a>
         </div>
         @endcan
@@ -87,7 +87,7 @@
                 <div class="action-icon-minimal">
                     <i class="fas fa-shopping-cart"></i>
                 </div>
-                <div class="action-label-minimal">My Cart</div>
+                <div class="action-label-minimal">Keranjang Saya</div>
             </a>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -95,7 +95,7 @@
                 <div class="action-icon-minimal">
                     <i class="fas fa-user"></i>
                 </div>
-                <div class="action-label-minimal">My Profile</div>
+                <div class="action-label-minimal">Profil Saya</div>
             </a>
         </div>
         @can('view-rentals')
@@ -104,7 +104,7 @@
                 <div class="action-icon-minimal">
                     <i class="fas fa-clipboard-list"></i>
                 </div>
-                <div class="action-label-minimal">My Rentals</div>
+                <div class="action-label-minimal">Penyewaan Saya</div>
             </a>
         </div>
         @endcan

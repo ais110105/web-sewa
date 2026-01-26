@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Transaction Management - Web Sewa')
+@section('title', 'Kelola Transaksi - Tirta Kesuma')
 
 @section('content')
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Transaction Management</h3>
+    <h3 class="fw-bold mb-3">Kelola Transaksi</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home">
             <a href="{{ route('dashboard') }}">
@@ -15,7 +15,7 @@
             <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-            <a href="#">Transactions</a>
+            <a href="#">Transaksi</a>
         </li>
     </ul>
 </div>
@@ -66,7 +66,7 @@
                                 <thead>
                                     <tr>
                                         <th width="12%">Kode Rental</th>
-                                        <th width="12%">Customer</th>
+                                        <th width="12%">Pelanggan</th>
                                         <th width="18%">Periode & Item</th>
                                         <th width="10%">Total</th>
                                         <th width="12%">Status Rental</th>
@@ -119,7 +119,7 @@
                                         <td>
                                             @if($rental->status === 'pending')
                                                 <span class="badge badge-warning">
-                                                    <i class="fas fa-clock"></i> Pending
+                                                    <i class="fas fa-clock"></i> Menunggu
                                                 </span>
                                             @elseif($rental->status === 'confirmed')
                                                 <span class="badge badge-info">
@@ -146,7 +146,7 @@
                                                 </span>
                                             @else
                                                 <span class="badge badge-secondary">
-                                                    <i class="fas fa-undo"></i> Refunded
+                                                    <i class="fas fa-undo"></i> Dikembalikan
                                                 </span>
                                             @endif
                                         </td>
@@ -215,7 +215,7 @@
     <div class="offcanvas-body">
         <!-- Informasi Customer -->
         <div class="mb-4">
-            <h6 class="text-muted mb-3 fw-bold">Informasi Customer</h6>
+            <h6 class="text-muted mb-3 fw-bold">Informasi Pelanggan</h6>
             <table class="table table-sm table-borderless">
                 <tr>
                     <td width="40%" class="text-muted">Nama</td>
@@ -226,7 +226,7 @@
                     <td>{{ $rental->user->email }}</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Phone</td>
+                    <td class="text-muted">Telepon</td>
                     <td>{{ $rental->user->phone ?? '-' }}</td>
                 </tr>
             </table>
@@ -285,7 +285,7 @@
                     <td>Rp {{ number_format($rental->subtotal, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td class="text-muted">Tax</td>
+                    <td class="text-muted">Pajak</td>
                     <td>Rp {{ number_format($rental->tax ?? 0, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
@@ -300,7 +300,7 @@
                         @elseif($rental->payment_status === 'unpaid')
                             <span class="badge badge-danger">Belum Lunas</span>
                         @else
-                            <span class="badge badge-secondary">Refunded</span>
+                            <span class="badge badge-secondary">Dikembalikan</span>
                         @endif
                     </td>
                 </tr>

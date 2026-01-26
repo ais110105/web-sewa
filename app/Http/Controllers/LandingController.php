@@ -22,6 +22,7 @@ class LandingController extends Controller
             return redirect()->route("home");
         }
 
+        // Fetch categories with count (1 query)
         $categories = Category::select("id", "name", "description")
             ->withCount([
                 "items as available_items_count" => function ($query) {
@@ -32,41 +33,40 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
-        $featuredItems = Item::with("category")
-            ->where("status", "available")
-            ->orderByDesc("available_stock")
-            ->latest()
-            ->take(9)
-            ->get();
-
-        $banners = Item::with("category")
+        // Fetch all available items once with eager loading (1 query)
+        $availableItems = Item::with("category:id,name")
             ->where("status", "available")
             ->latest()
-            ->take(6)
+            ->take(20)
             ->get();
 
-        $newArrivals = Item::with("category")
-            ->where("status", "available")
-            ->latest()
-            ->take(10)
-            ->get();
+        // Featured items - sorted by available stock (reuse collection)
+        $featuredItems = $availableItems->sortByDesc("available_stock")->take(9)->values();
 
-        $bestSellers = Item::with("category")
-            ->where("status", "available")
-            ->orderByDesc("available_stock")
-            ->take(10)
-            ->get();
+        // Banners - latest 6 (reuse collection)
+        $banners = $availableItems->take(6);
 
-        $relatedItems = Item::with("category")
-            ->where("status", "available")
-            ->inRandomOrder()
-            ->take(8)
-            ->get();
+        // New arrivals - latest 10 (reuse collection)
+        $newArrivals = $availableItems->take(10);
+
+        // Best sellers - top 10 by stock (reuse collection)
+        $bestSellers = $availableItems->sortByDesc("available_stock")->take(10)->values();
+
+        // Related items - random 8 (reuse collection)
+        $relatedItems = $availableItems->shuffle()->take(8);
+
+        // Combine stats into a single optimized query using raw SQL
+        $statsRaw = \DB::selectOne("
+            SELECT
+                (SELECT COUNT(*) FROM items) as items_count,
+                (SELECT COALESCE(SUM(available_stock), 0) FROM items) as available_stock,
+                (SELECT COUNT(*) FROM rentals WHERE status = 'completed') as completed_rentals
+        ");
 
         $stats = [
-            "items" => Item::count(),
-            "availableStock" => (int) Item::sum("available_stock"),
-            "completedRentals" => Rental::where("status", "completed")->count(),
+            "items" => $statsRaw->items_count,
+            "availableStock" => (int) $statsRaw->available_stock,
+            "completedRentals" => $statsRaw->completed_rentals,
         ];
 
         return view(
