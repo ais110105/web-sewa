@@ -174,12 +174,35 @@
                                                     title="Detail">
                                                     <i class="fas fa-eye"></i> Detail
                                                 </button>
-                                                <button type="button" class="btn btn-primary btn-sm update-status-btn"
-                                                    data-rental-id="{{ $rental->id }}"
-                                                    data-current-status="{{ $rental->status }}"
-                                                    title="Update Status">
-                                                    <i class="fas fa-edit"></i> Update
-                                                </button>
+                                                @php
+                                                    $nextMap = [
+                                                        'pending'   => ['status' => 'confirmed', 'label' => 'Konfirmasi',         'icon' => 'fa-check',        'class' => 'btn-info'],
+                                                        'confirmed' => ['status' => 'on_rent',   'label' => 'Tandai Diambil',     'icon' => 'fa-truck',        'class' => 'btn-primary'],
+                                                        'on_rent'   => ['status' => 'completed', 'label' => 'Tandai Dikembalikan','icon' => 'fa-check-double', 'class' => 'btn-success'],
+                                                    ];
+                                                    $next = $nextMap[$rental->status] ?? null;
+                                                @endphp
+                                                @if($next)
+                                                    <button type="button" class="btn {{ $next['class'] }} btn-sm mb-1 next-step-btn"
+                                                        data-rental-id="{{ $rental->id }}"
+                                                        data-next-status="{{ $next['status'] }}"
+                                                        data-next-label="{{ $next['label'] }}"
+                                                        title="{{ $next['label'] }}">
+                                                        <i class="fas {{ $next['icon'] }}"></i> {{ $next['label'] }}
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-secondary btn-sm mb-1" disabled>
+                                                        <i class="fas fa-flag-checkered"></i>
+                                                        {{ $rental->status === 'cancelled' ? 'Dibatalkan' : 'Selesai' }}
+                                                    </button>
+                                                @endif
+                                                @if(in_array($rental->status, ['pending', 'confirmed']))
+                                                    <button type="button" class="btn btn-outline-danger btn-sm cancel-rental-btn"
+                                                        data-rental-id="{{ $rental->id }}"
+                                                        title="Batalkan">
+                                                        <i class="fas fa-times"></i> Batalkan
+                                                    </button>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -490,61 +513,64 @@ $(document).ready(function() {
         }
     });
 
-    // Update Status Button
-    $('.update-status-btn').on('click', function() {
+    function postStatus(rentalId, newStatus, successMsg) {
+        $.ajax({
+            url: `/transactions/${rentalId}/update-status`,
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: newStatus
+            },
+            success: function(response) {
+                if (response.success) {
+                    showToast(successMsg, 'success');
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    showToast(response.message || 'Gagal update status', 'error');
+                }
+            },
+            error: function() {
+                showToast('Terjadi kesalahan', 'error');
+            }
+        });
+    }
+
+    // Sequential next-step button
+    $(document).on('click', '.next-step-btn', function() {
         const rentalId = $(this).data('rental-id');
-        const currentStatus = $(this).data('current-status');
-
-        // Status options
-        const statusOptions = {
-            'confirmed': 'Dikonfirmasi',
-            'on_rent': 'Berlangsung',
-            'completed': 'Selesai'
-        };
-
-        let optionsHtml = '';
-        for (const [value, label] of Object.entries(statusOptions)) {
-            const selected = value === currentStatus ? 'selected' : '';
-            optionsHtml += `<option value="${value}" ${selected}>${label}</option>`;
-        }
+        const nextStatus = $(this).data('next-status');
+        const nextLabel = $(this).data('next-label');
 
         Swal.fire({
-            title: 'Update Status Rental',
-            html: `
-                <select id="swal-status" class="form-control">
-                    ${optionsHtml}
-                </select>
-            `,
+            title: nextLabel + '?',
+            text: 'Lanjutkan rental ke tahap "' + nextLabel + '"?',
+            icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Update',
+            confirmButtonText: 'Ya, Lanjutkan',
             cancelButtonText: 'Batal',
             confirmButtonColor: '#3085d6',
-            preConfirm: () => {
-                return document.getElementById('swal-status').value;
-            }
         }).then((result) => {
             if (result.isConfirmed) {
-                const newStatus = result.value;
+                postStatus(rentalId, nextStatus, 'Status diperbarui ke ' + nextLabel);
+            }
+        });
+    });
 
-                $.ajax({
-                    url: `/transactions/${rentalId}/update-status`,
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        status: newStatus
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            showToast('Status berhasil diupdate', 'success');
-                            setTimeout(() => window.location.reload(), 1000);
-                        } else {
-                            showToast(response.message || 'Gagal update status', 'error');
-                        }
-                    },
-                    error: function() {
-                        showToast('Terjadi kesalahan', 'error');
-                    }
-                });
+    // Cancel rental
+    $(document).on('click', '.cancel-rental-btn', function() {
+        const rentalId = $(this).data('rental-id');
+
+        Swal.fire({
+            title: 'Batalkan Rental?',
+            text: 'Rental yang dibatalkan tidak dapat dikembalikan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Batalkan',
+            cancelButtonText: 'Tidak',
+            confirmButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                postStatus(rentalId, 'cancelled', 'Rental dibatalkan');
             }
         });
     });
