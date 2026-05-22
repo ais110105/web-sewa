@@ -187,6 +187,14 @@ Route::middleware("auth")->group(function () {
                 \App\Http\Controllers\TransactionManagementController::class,
                 "updateStatus",
             ])->name("update.status");
+            Route::get("/{rental}/return-form-data", [
+                \App\Http\Controllers\TransactionManagementController::class,
+                "returnFormData",
+            ])->name("return.form-data");
+            Route::post("/{rental}/complete-return", [
+                \App\Http\Controllers\TransactionManagementController::class,
+                "completeReturn",
+            ])->name("complete.return");
             Route::get("/statistics", [
                 \App\Http\Controllers\TransactionManagementController::class,
                 "statistics",

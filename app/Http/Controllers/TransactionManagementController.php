@@ -105,6 +105,60 @@ class TransactionManagementController extends Controller
     }
 
     /**
+     * GET data untuk modal form pengembalian.
+     */
+    public function returnFormData(\App\Models\Rental $rental)
+    {
+        $rental->load('rentalItems.item');
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'rental_code' => $rental->rental_code,
+                'items' => $rental->rentalItems->map(function ($ri) {
+                    return [
+                        'rental_item_id' => $ri->id,
+                        'item_name' => $ri->item->name,
+                        'quantity' => $ri->quantity,
+                    ];
+                }),
+            ],
+        ]);
+    }
+
+    /**
+     * POST: simpan kondisi tiap item + ubah ke completed.
+     */
+    public function completeReturn(\Illuminate\Http\Request $request, \App\Models\Rental $rental)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.rental_item_id' => 'required|integer|exists:rental_items,id',
+            'items.*.condition' => 'required|in:baik,rusak_ringan,rusak_berat,hilang',
+            'items.*.notes' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            if (!$rental->completeReturn($validated['items'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rental tidak dapat diselesaikan dari status saat ini',
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengembalian berhasil dicatat',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mencatat pengembalian: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Get statistics data
      */
     public function statistics()
