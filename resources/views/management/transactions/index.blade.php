@@ -417,6 +417,30 @@
 </div>
 @endforeach
 
+<div class="modal fade" id="returnModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Pengembalian — <span id="returnRentalCode"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="returnForm">
+                <div class="modal-body">
+                    <div id="returnItemsContainer">
+                        <!-- diisi via JS -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success" id="returnSubmitBtn">
+                        <i class="fa fa-check-double"></i> Simpan & Selesaikan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -553,6 +577,11 @@ $(document).ready(function() {
         const nextStatus = $(this).data('next-status');
         const nextLabel = $(this).data('next-label');
 
+        if (nextStatus === 'completed') {
+            openReturnModal(rentalId);
+            return;
+        }
+
         Swal.fire({
             title: nextLabel + '?',
             text: 'Lanjutkan rental ke tahap "' + nextLabel + '"?',
@@ -583,6 +612,82 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 postStatus(rentalId, 'cancelled', 'Rental dibatalkan');
+            }
+        });
+    });
+
+    function openReturnModal(rentalId) {
+        $.get(`/transactions/${rentalId}/return-form-data`, function(resp) {
+            if (!resp.success) {
+                showToast('Gagal memuat data', 'error');
+                return;
+            }
+            $('#returnRentalCode').text(resp.data.rental_code);
+            const container = $('#returnItemsContainer');
+            container.empty();
+            resp.data.items.forEach(function(it, idx) {
+                container.append(`
+                    <div class="border rounded p-3 mb-3" data-rental-item-id="${it.rental_item_id}">
+                        <h6 class="mb-2">${it.item_name} <span class="text-muted">× ${it.quantity}</span></h6>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Kondisi <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm item-condition" required>
+                                <option value="">-- Pilih kondisi --</option>
+                                <option value="baik">Baik</option>
+                                <option value="rusak_ringan">Rusak Ringan</option>
+                                <option value="rusak_berat">Rusak Berat</option>
+                                <option value="hilang">Hilang</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small mb-1">Catatan (opsional)</label>
+                            <textarea class="form-control form-control-sm item-notes" rows="2" maxlength="500"></textarea>
+                        </div>
+                    </div>
+                `);
+            });
+            $('#returnForm').data('rental-id', rentalId);
+            new bootstrap.Modal(document.getElementById('returnModal')).show();
+        }).fail(function() {
+            showToast('Terjadi kesalahan', 'error');
+        });
+    }
+
+    $('#returnForm').on('submit', function(e) {
+        e.preventDefault();
+        const rentalId = $(this).data('rental-id');
+        const items = [];
+        let valid = true;
+        $('#returnItemsContainer > div').each(function() {
+            const condition = $(this).find('.item-condition').val();
+            if (!condition) { valid = false; return; }
+            items.push({
+                rental_item_id: parseInt($(this).data('rental-item-id'), 10),
+                condition: condition,
+                notes: $(this).find('.item-notes').val() || null,
+            });
+        });
+        if (!valid) {
+            showToast('Semua kondisi item wajib dipilih', 'error');
+            return;
+        }
+        $('#returnSubmitBtn').prop('disabled', true);
+        $.ajax({
+            url: `/transactions/${rentalId}/complete-return`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}', items: items },
+            success: function(resp) {
+                if (resp.success) {
+                    showToast(resp.message, 'success');
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    showToast(resp.message || 'Gagal', 'error');
+                    $('#returnSubmitBtn').prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                showToast(xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                $('#returnSubmitBtn').prop('disabled', false);
             }
         });
     });
