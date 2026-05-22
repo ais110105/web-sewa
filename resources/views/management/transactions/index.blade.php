@@ -57,6 +57,11 @@
                             Selesai <span class="badge bg-success ms-1" id="count-completed">0</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="#" data-filter="overdue">
+                            Terlambat <span class="badge bg-danger ms-1" id="count-overdue">0</span>
+                        </a>
+                    </li>
                 </ul>
 
                 <div class="tab-content" id="pills-tabContent">
@@ -77,9 +82,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse($rentals as $rental)
-                                    <tr class="rental-row"
-                                        data-status="{{ $rental->status }}"
-                                        data-payment="{{ $rental->payment_status }}">
+                                    <tr class="rental-row" data-status="{{ $rental->status }}" data-overdue="{{ $rental->is_overdue ? '1' : '0' }}" data-payment="{{ $rental->payment_status }}">
                                         <td>
                                             <strong>{{ $rental->rental_code }}</strong>
                                             <br>
@@ -126,9 +129,12 @@
                                                     <i class="fas fa-check"></i> Dikonfirmasi
                                                 </span>
                                             @elseif($rental->status === 'on_rent')
-                                                <span class="badge badge-primary">
-                                                    <i class="fas fa-box"></i> Berlangsung
-                                                </span>
+                                                <span class="badge bg-primary">Berlangsung</span>
+                                                @if($rental->is_overdue)
+                                                    <span class="badge bg-danger ms-1" title="end_date: {{ $rental->end_date->format('d M Y') }}">
+                                                        <i class="fa fa-clock"></i> Terlambat {{ $rental->days_late }} hari
+                                                    </span>
+                                                @endif
                                             @elseif($rental->status === 'completed')
                                                 <span class="badge badge-success">
                                                     <i class="fas fa-check-double"></i> Selesai
@@ -463,10 +469,13 @@ $(document).ready(function() {
         const onRentCount = $('.rental-row[data-status="on_rent"]').length;
         const completedCount = $('.rental-row[data-status="completed"]').length;
 
+        const overdueCount = $('.rental-row[data-overdue="1"]').length;
+
         $('#count-all').text(allCount);
         $('#count-confirmed').text(confirmedCount);
         $('#count-on_rent').text(onRentCount);
         $('#count-completed').text(completedCount);
+        $('#count-overdue').text(overdueCount);
     }
 
     updateCounts();
@@ -493,6 +502,9 @@ $(document).ready(function() {
         } else if (filter === 'completed') {
             $('.rental-row').hide();
             $('.rental-row[data-status="completed"]').show();
+        } else if (filter === 'overdue') {
+            $('.rental-row').hide();
+            $('.rental-row[data-overdue="1"]').show();
         }
 
         // Show empty message if no results
