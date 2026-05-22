@@ -185,6 +185,36 @@ class MidtransService
         }
     }
 
+    /**
+     * Refund transaksi via Midtrans API.
+     * Untuk metode yang tidak support instant refund (mis. bank transfer manual),
+     * API akan return error; caller wajib catch & tindak lanjut.
+     */
+    public function refundTransaction(string $orderId, ?int $amount = null, string $reason = 'Auto refund'): array
+    {
+        try {
+            $params = ['reason' => $reason];
+            if ($amount !== null) {
+                $params['amount'] = $amount;
+            }
+
+            $response = MidtransTransaction::refund($orderId, $params);
+
+            $transaction = Transaction::where('order_id', $orderId)->first();
+            if ($transaction) {
+                $transaction->update(['status' => 'refund']);
+            }
+
+            return is_object($response) ? json_decode(json_encode($response), true) : (array) $response;
+        } catch (\Exception $e) {
+            \Log::error('Midtrans refund failed', [
+                'order_id' => $orderId,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
     private function formatItemDetails(array $items): array
     {
         return array_map(function ($item) {
