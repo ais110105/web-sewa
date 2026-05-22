@@ -136,6 +136,52 @@ class Rental extends Model
     }
 
     /**
+     * Selesaikan rental dengan kondisi per item.
+     * $itemConditions: [['rental_item_id' => int, 'condition' => string, 'notes' => ?string], ...]
+     * condition: 'baik' | 'rusak_ringan' | 'rusak_berat' | 'hilang'
+     */
+    public function completeReturn(array $itemConditions): bool
+    {
+        if (!in_array($this->status, ['on_rent', 'confirmed'], true)) {
+            return false;
+        }
+
+        $byId = collect($itemConditions)->keyBy('rental_item_id');
+
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($byId) {
+            foreach ($this->rentalItems()->with('item')->get() as $rentalItem) {
+                $entry = $byId->get($rentalItem->id);
+                if (!$entry) {
+                    throw new \RuntimeException("Kondisi untuk rental_item {$rentalItem->id} tidak diberikan");
+                }
+                $condition = $entry['condition'];
+                $notes = $entry['notes'] ?? null;
+
+                $rentalItem->update([
+                    'item_condition_return' => $condition,
+                    'notes' => $notes,
+                ]);
+
+                $item = $rentalItem->item;
+                if (in_array($condition, ['baik', 'rusak_ringan'], true)) {
+                    $item->increment('available_stock', $rentalItem->quantity);
+                } elseif (in_array($condition, ['rusak_berat', 'hilang'], true)) {
+                    $item->decrement('stock', $rentalItem->quantity);
+                } else {
+                    throw new \InvalidArgumentException("Kondisi tidak valid: {$condition}");
+                }
+            }
+
+            $this->update([
+                'status' => 'completed',
+                'returned_at' => now(),
+            ]);
+
+            return true;
+        });
+    }
+
+    /**
      * Mark rental as returned and increase stock
      */
     public function markAsReturned(): bool
