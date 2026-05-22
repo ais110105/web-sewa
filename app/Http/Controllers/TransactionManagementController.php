@@ -22,7 +22,11 @@ class TransactionManagementController extends Controller
 
         // Filter by status
         if ($request->has("status") && $request->status !== "all") {
-            $query->where("status", $request->status);
+            if ($request->status === "overdue") {
+                $query->overdue();
+            } else {
+                $query->where("status", $request->status);
+            }
         }
 
         // Search by rental code, order ID, or user name
