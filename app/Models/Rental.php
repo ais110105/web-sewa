@@ -103,6 +103,39 @@ class Rental extends Model
     }
 
     /**
+     * Days late (0 jika tidak on_rent atau belum lewat end_date).
+     */
+    public function getDaysLateAttribute(): int
+    {
+        if ($this->status !== 'on_rent' || !$this->end_date) {
+            return 0;
+        }
+
+        $endDate = $this->end_date instanceof \Carbon\Carbon
+            ? $this->end_date
+            : \Carbon\Carbon::parse($this->end_date);
+
+        $today = \Carbon\Carbon::today();
+
+        if ($endDate->greaterThanOrEqualTo($today)) {
+            return 0;
+        }
+
+        return (int) $endDate->diffInDays($today);
+    }
+
+    public function getIsOverdueAttribute(): bool
+    {
+        return $this->days_late > 0;
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', 'on_rent')
+            ->whereDate('end_date', '<', now()->toDateString());
+    }
+
+    /**
      * Mark rental as returned and increase stock
      */
     public function markAsReturned(): bool
