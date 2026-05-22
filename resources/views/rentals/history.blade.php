@@ -269,6 +269,16 @@
                     </td>
                 </tr>
             </table>
+            @if(in_array($rental->payment_status, ['refunded', 'pending_refund']))
+                <div class="alert alert-warning small mt-2 mb-0 py-2">
+                    <i class="fa fa-info-circle"></i>
+                    @if($rental->payment_status === 'refunded')
+                        Pembayaran Anda <strong>direfund otomatis</strong> karena stok sudah habis lebih dulu.
+                    @else
+                        Pembayaran Anda akan <strong>direfund manual</strong> oleh admin karena stok sudah habis. Mohon menunggu.
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Item yang Disewa -->
