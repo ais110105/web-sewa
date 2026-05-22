@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Log;
 class PaymentController extends Controller
 {
     protected $midtransService;
+    protected $paymentService;
 
-    public function __construct(MidtransService $midtransService)
+    public function __construct(MidtransService $midtransService, \App\Services\PaymentService $paymentService)
     {
         $this->midtransService = $midtransService;
+        $this->paymentService = $paymentService;
     }
 
     public function checkout(Request $request)
@@ -141,35 +143,18 @@ class PaymentController extends Controller
         try {
             $transaction = $this->midtransService->handleNotification($request->all());
 
-            // Update rental status if payment is successful
             if ($transaction->status === 'settlement') {
                 $rental = Rental::where('transaction_id', $transaction->id)->first();
-
                 if ($rental) {
-                    $rental->update([
-                        'payment_status' => 'paid',
-                        'status' => 'confirmed',
-                        'confirmed_at' => now(),
-                    ]);
-
-                    // Decrease stock for each rental item
-                    foreach ($rental->rentalItems as $rentalItem) {
-                        $rentalItem->item->decreaseStock($rentalItem->quantity);
-                    }
-
-                    Log::info("Rental {$rental->rental_code} confirmed after payment and stock decreased");
+                    $this->paymentService->settleRental($rental);
+                    Log::info("Rental {$rental->rental_code} settled via webhook");
                 }
             }
 
-            // Handle cancelled/expired payment
             if (in_array($transaction->status, ['expire', 'cancel', 'deny'])) {
                 $rental = Rental::where('transaction_id', $transaction->id)->first();
-
                 if ($rental && $rental->status === 'pending') {
-                    $rental->update([
-                        'status' => 'cancelled',
-                    ]);
-
+                    $rental->update(['status' => 'cancelled']);
                     Log::info("Rental {$rental->rental_code} cancelled due to payment {$transaction->status}");
                 }
             }
@@ -177,11 +162,7 @@ class PaymentController extends Controller
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             Log::error('Webhook error: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 }

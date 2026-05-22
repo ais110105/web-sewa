@@ -15,11 +15,16 @@ class CheckoutController extends Controller
 {
     protected CheckoutServiceInterface $checkoutService;
     protected MidtransService $midtransService;
+    protected \App\Services\PaymentService $paymentService;
 
-    public function __construct(CheckoutServiceInterface $checkoutService, MidtransService $midtransService)
-    {
+    public function __construct(
+        CheckoutServiceInterface $checkoutService,
+        MidtransService $midtransService,
+        \App\Services\PaymentService $paymentService
+    ) {
         $this->checkoutService = $checkoutService;
         $this->midtransService = $midtransService;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -241,30 +246,21 @@ class CheckoutController extends Controller
 
             // Update rental based on payment status
             if ($newStatus === 'settlement') {
-                $rental->update([
-                    'payment_status' => 'paid',
-                    'status' => 'confirmed',
-                    'confirmed_at' => now(),
-                ]);
-
-                $rental->transaction->update(['paid_at' => now()]);
-
-                // Decrease stock for each rental item
-                foreach ($rental->rentalItems as $rentalItem) {
-                    $rentalItem->item->decreaseStock($rentalItem->quantity);
-                }
+                $this->paymentService->settleRental($rental);
+                $rental->refresh();
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Payment confirmed! Rental status updated.',
+                    'message' => $rental->payment_status === 'paid'
+                        ? 'Payment confirmed! Rental status updated.'
+                        : 'Pembayaran diterima tapi stok sudah habis — refund diproses.',
                     'data' => [
-                        'payment_status' => 'paid',
-                        'rental_status' => 'confirmed',
+                        'payment_status' => $rental->payment_status,
+                        'rental_status' => $rental->status,
                     ],
                 ]);
             } elseif (in_array($newStatus, ['expire', 'cancel', 'deny'])) {
                 $rental->update(['status' => 'cancelled']);
-
                 return response()->json([
                     'success' => true,
                     'message' => 'Payment ' . $newStatus,
