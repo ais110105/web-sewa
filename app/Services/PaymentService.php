@@ -13,14 +13,13 @@ class PaymentService
 
     /**
      * Settle rental setelah payment sukses.
-     * Aturan: yang lebih dulu masuk lock + stok cukup → confirmed.
-     * Yang stoknya habis → cancelled + refund.
+     * Idempotent: tidak melakukan apa-apa jika rental sudah di-settle sebelumnya.
      */
     public function settleRental(Rental $rental): void
     {
         $rental->loadMissing('rentalItems', 'transaction');
 
-        // Idempotency: kalau sudah paid/refunded, skip.
+        // Fast-path idempotency check sebelum acquire lock.
         if (in_array($rental->payment_status, ['paid', 'refunded', 'pending_refund'], true)) {
             return;
         }
@@ -28,6 +27,13 @@ class PaymentService
         $itemIds = $rental->rentalItems->pluck('item_id')->all();
 
         $stockOk = DB::transaction(function () use ($rental, $itemIds) {
+            // Re-check di dalam transaksi setelah lock untuk mencegah double-settle
+            // pada concurrent webhook calls.
+            $rental->refresh();
+            if (in_array($rental->payment_status, ['paid', 'refunded', 'pending_refund'], true)) {
+                return true; // sudah di-settle oleh request lain, anggap sukses
+            }
+
             $items = Item::whereIn('id', $itemIds)->lockForUpdate()->get()->keyBy('id');
 
             foreach ($rental->rentalItems as $ri) {
